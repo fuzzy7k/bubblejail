@@ -1753,8 +1753,12 @@ class ServiceContainer:
                 return new_converter.structure(val, list[str])
 
         def parse_field(val: str, mount: Mount) -> Path | None:
-            if Path(val).is_absolute():
-                return Path(val)
+            x = Path(val)
+            if x.is_absolute():
+                return x
+
+            if x.parts[0] == '~':
+                return x.expanduser()
 
             match val:
                 case 'try' | 'optional':
